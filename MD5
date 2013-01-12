@@ -1,0 +1,8 @@
+d24d7d7b098298875d4cae326053bfcb *DESCRIPTION
+c1d0f4255af65ae12561f3be3fc1d91c *NAMESPACE
+937811a1f5cfb10674ace412b604d0c6 *R/Rcpp_cplfunctionMethods.R
+b4665c4cd6194dc02ca84b46c929be0a *R/zzz.R
+51cdfb35a72e99eb810ea0a85fe55044 *man/ConConPiWiFun-package.Rd
+b3f86c20b81b51f5162874977d38784d *src/Makevars
+73505498722ad4b07b0ddb3067e92523 *src/Makevars.win
+4bc68a89accbda432c9c9f648760d45a *src/OptimMargInt.cc

@@ -1,0 +1,3 @@
+useDynLib(ConConPiWiFun)
+exportPattern("^[[:alpha:]]+")
+import( Rcpp )
