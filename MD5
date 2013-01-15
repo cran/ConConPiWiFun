@@ -1,7 +1,10 @@
-48edb62fd715c7756d62f888038d9bab *DESCRIPTION
+6d0fcf8fadbbaa0267317befb8b01d4f *DESCRIPTION
 951f7770cf4f47ae0f82486b8e491475 *NAMESPACE
 06a59da8ea81a819b38fcf52d71549c9 *R/zzz.R
-22487bf714940873741395a3389920ae *man/ConConPiWiFun-package.Rd
-b3f86c20b81b51f5162874977d38784d *src/Makevars
-3b10fe0566119fb45531f7dcc466812e *src/Makevars.win
-db70dc86561a0cf64bf641df8786151b *src/OptimMargInt.cc
+237535c15fb3ab797db3b2e79b4a2d1a *inst/include/cpfunction.h
+ec316805e53448253439743c8765fae5 *man/ConConPiWiFun-package.Rd
+dad921ece214d54cabec8e13771ad7c3 *man/cplfunction.Rd
+c1032333d7b7e330e5f4ebbdb211555e *man/cplfunctionvec.Rd
+7d9924509845a6ed8fe6a0b205bd54b6 *src/Makevars
+c6ec7ed706239099b29aaea55b5d588e *src/Makevars.win
+d12739807b2b13272b31c797131a2d8d *src/cplfunction.cc

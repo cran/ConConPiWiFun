@@ -2,7 +2,7 @@ Package: ConConPiWiFun
 Type: Package
 Title: This package contains an implementation of continuous convex
         piecewise (linear) functions (quadratic coming soon
-Version: 0.2
+Version: 0.3
 Date: 2013-01-15
 Author: Robin Girard
 Maintainer: Robin Girard <robin.girard@mines-paristech.fr>
@@ -20,6 +20,6 @@ License: GPL (>= 2)
 Depends: methods, graphics, Rcpp (>= 0.10.2)
 LinkingTo: Rcpp
 RcppModules: mod_cplfunction
-Packaged: 2013-01-22 07:17:36 UTC; robin
+Packaged: 2013-02-12 20:28:53 UTC; robin
 Repository: CRAN
-Date/Publication: 2013-01-22 11:44:08
+Date/Publication: 2013-02-13 06:14:16
