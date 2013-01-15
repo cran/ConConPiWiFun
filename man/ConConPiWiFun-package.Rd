@@ -21,7 +21,7 @@ Continuous convex piecewise linear (ccpl) resp. quadratic (ccpq) functions can b
 \tabular{ll}{
 Package: \tab ConConPiWiFun\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
+Version: \tab 0.2\cr
 Date: \tab 2013-01-08\cr
 License: \tab GPL\cr
 }
@@ -50,11 +50,13 @@ CCPWLfunc1=new(cplfunction,Slopes,Breakpoints,FirstNonInfBreakpointVal)
 plot(CCPWLfunc1) #visualisation method
 CCPWLfunc1$get_BreakPoints_() ## return Breaks AND Slopes
 
+
 ###Etoile transformation (legendre transform of f)
 # Changes f + returns the results !
 plot(CCPWLfunc1$Etoile())  #if f = CCPWLfunc1 CCPWLfunc1 becomes is f^*(y) =inf_x {xy-f(x)}
 plot(CCPWLfunc1$Etoile())  ## (f^*)^* is f !
-                           
+TT=CCPWLfunc1$Etoile()
+
 ###Squeeze function 
 # Changes f, no return!
 left=-1; right=4
@@ -67,15 +69,19 @@ CCPWLfunc1$Squeeze(left,right) # CCPWLfunc1 is now infinite (or not definite) ou
 y=2
 plot(CCPWLfunc1$Swap(y)); #now f = CCPWLfunc1 is replaced by x -> f(y-x) 
 
+
 ### Sum function (uses fast insertion) do not affect operands 
 CCPWLfunc1=new(cplfunction,c(-1,2) ,c(-Inf,2,4),0)
 CCPWLfunc2=new(cplfunction,c(-1,2),c(-Inf,1,3),0)
 CCPWLfunc1plus2=Sum(CCPWLfunc1,CCPWLfunc2)
+
 par(mfrow=c(1,3))
 plot(CCPWLfunc2,col='red'); 
 plot(CCPWLfunc1,col='blue'); 
 plot(CCPWLfunc1plus2);
 
+rm(list=ls())
+gc()
 #### Infconvolution application is let as an exercise for students of Master REST. Will be in further version
 
 #### dynamic programming application is let as an exercise for students of Master REST. 

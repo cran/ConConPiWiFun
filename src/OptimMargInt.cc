@@ -1,9 +1,10 @@
-
 #include <map>
 #include <math.h>
 #include <limits>
 #include <Rcpp.h>
 
+using namespace std;
+using namespace Rcpp;
 class cplfunction ;
 RCPP_EXPOSED_CLASS(cplfunction)
 
@@ -19,16 +20,18 @@ bool isincreasing(Rcpp::NumericVector arg){
 }
 
 
-using namespace std;
-using namespace Rcpp;
-
 
 class cplfunction {
    public:
 
-   	map<double,double> Breakpoints_; // breakpoints
+  map<double,double> Breakpoints_; // breakpoints
 	double FirstBreakVal_; // firstbreakval
 
+
+  ~cplfunction(){
+    Breakpoints_.clear();
+  };
+  
 	cplfunction(){
 		map<double,double> Breakpoints_;
 		FirstBreakVal_=0;
@@ -36,7 +39,7 @@ class cplfunction {
 
 	cplfunction(int NbSlopes, double * Slopes, double * BreakPoints,double FirstBreakVal) {
 		create_cplfunction(NbSlopes,Slopes,BreakPoints,FirstBreakVal);
-	};
+	}
 
     class emptyfunc : public std::exception {
      public:
@@ -79,10 +82,10 @@ class cplfunction {
 	}
 
 	cplfunction(cplfunction const & x) : Breakpoints_(x.Breakpoints_), FirstBreakVal_(x.FirstBreakVal_) {
-	};
+	}
 
 	cplfunction* clone(){
-		return new cplfunction(*this) ;
+		return new cplfunction() ;
 	}
 
 	cplfunction(double uniquebreak,double val){
@@ -117,28 +120,30 @@ class cplfunction {
 	   }
 	   Breakpoints_[BreakPoints[NbSlopes]]=numeric_limits<double>::infinity();
 	   FirstBreakVal_= FirstBreakVal;
-   };
+   }
 
-  	Rcpp::List get_BreakPoints_(){
+
+    
+    Rcpp::List get_BreakPoints(){
+      std::vector<double> Breakpoints;
+  		std::vector<double> Slopes;
 	 	 	map<double,double>::iterator it=Breakpoints_.begin();
 	 	 	int nbSlopes=0,compteur=0;
 	 	 	while(it != Breakpoints_.end()) {it++; nbSlopes++;}
 	 	 	nbSlopes--;
-  			Rcpp::NumericVector Breakpoints(nbSlopes+1);
-  			Rcpp::NumericVector Slopes(nbSlopes);
   			it=Breakpoints_.begin();
   			compteur=0;
   			while(it != Breakpoints_.end()) {
-  				Breakpoints[compteur]=it->first;
+  				Breakpoints.push_back( it->first );
   				if (compteur != (nbSlopes+1)){
-  					Slopes[compteur]=it->second;
+  					Slopes.push_back( it->second );
   				}
   				it++; compteur++;
   			}
 
   			return Rcpp::List::create(
-				_["Breakpoints"] = Breakpoints,
-				_["Slopes"] = Slopes);
+				Rcpp::Named("Breakpoints") = Rcpp::wrap(Breakpoints),
+				Rcpp::Named("Slopes") = Rcpp::wrap(Slopes));
   	}
 
 
@@ -165,9 +170,10 @@ class cplfunction {
       Breakpoints_=s.Breakpoints_;
       FirstBreakVal_=s.FirstBreakVal_;
      }
-
      return *this;
     }
+	
+	
     void AddSimple(double leftslope, double rightslope, double val, double breakpoint){
  	   map<double, double>::iterator i = Breakpoints_.begin();
  	   if (rightslope==leftslope){
@@ -216,8 +222,8 @@ class cplfunction {
  	           }
  	   	   }
  	   }
-
-    };
+    }
+	
     bool eq(cplfunction  const & cplfunction1){
  	   if (FirstBreakVal_!=cplfunction1.FirstBreakVal_){
  		   return(false);
@@ -379,7 +385,6 @@ class cplfunction {
        			if (i->second>0){ break;}
        			++i;
        		   }
-
  	       }
  	   }
  	  // cout<<"res="<<res<<endl;
@@ -516,13 +521,17 @@ cplfunction Sum (cplfunction const & cplfunction1,cplfunction const & cplfunctio
    			tmp1.Sumf(tmp2);
    			return(tmp1);
    		}
-}
+};
+
+ static void finalizer_of_cplfunction( cplfunction* ptr ){
+    ptr->cplfunction::~cplfunction();
+    //printf("finalizer has been called\n");
+ }
 
 
 RCPP_MODULE(mod_cplfunction){
-  
+  using namespace Rcpp;
 	class_<cplfunction>( "cplfunction" )
-
 	//constructors
 	.constructor()
 	.constructor<double,double>()
@@ -535,14 +544,16 @@ RCPP_MODULE(mod_cplfunction){
 	.field( "FirstBreakVal_", &cplfunction::FirstBreakVal_ )
 
 	//methods
-	.method("get_BreakPoints_",&cplfunction::get_BreakPoints_)
+	.method("get_BreakPoints_",&cplfunction::get_BreakPoints)
 	.method("Argmin",&cplfunction::Argmin)
 	.method("Squeeze",&cplfunction::Squeeze)
 	.method("Swap",&cplfunction::Swap)
 	.method("Etoile",&cplfunction::Etoile)
+  
+  .finalizer( &finalizer_of_cplfunction)  
 	;
 
-	function("Sum",Sum,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
+	function("Sum",&Sum,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
 	;
 
 }

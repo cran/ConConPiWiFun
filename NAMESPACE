@@ -1,3 +1,4 @@
+import(Rcpp,methods,graphics)
 useDynLib(ConConPiWiFun)
 exportPattern("^[[:alpha:]]+")
-import( Rcpp )
+exportMethods( "plot", "show" )
