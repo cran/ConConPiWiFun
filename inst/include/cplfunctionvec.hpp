@@ -31,6 +31,7 @@ class cplfunctionvec {
   void vec_set( int i,cplfunction value ) { MycplfunctionList_.at(i) = value; };
   cplfunction vec_get( int i) { return(MycplfunctionList_.at(i)); };
   int size(){ return(MycplfunctionList_.size()); };
+  
   void push_back(cplfunction func){MycplfunctionList_.push_back(func);};
 
   // serialized push
@@ -158,7 +159,7 @@ Rcpp::List OptimPriceStorage(NumericVector Prices,NumericVector Pmoins,NumericVe
 	std::vector<cplfunction> f;
 	cplfunction tmpfunc,tmpfunc3;
 
-	cplfunction tmpfunc2=cplfunction(*Pmoins_it,*Pplus_it,0,*Prices_it,numeric_limits<double>::infinity());
+	cplfunction tmpfunc2=cplfunction(*Pmoins_it,*Pplus_it,0,*Prices_it,std::numeric_limits<double>::infinity());
 	f.push_back(tmpfunc2);
 	++Pplus_it;++Pmoins_it; ++Prices_it;
 
@@ -183,7 +184,7 @@ Rcpp::List OptimPriceStorage(NumericVector Prices,NumericVector Pmoins,NumericVe
 	while(itf!= itfend)
 	{
 		--compteur;
-		cplfunction tmpfunc=cplfunction(Pmoins[compteur+1],Pplus[compteur+1],0,Prices[compteur+1],numeric_limits<double>::infinity());
+		cplfunction tmpfunc=cplfunction(Pmoins[compteur+1],Pplus[compteur+1],0,Prices[compteur+1],std::numeric_limits<double>::infinity());
 		itf->Squeeze(Cmoins[compteur],Cplus[compteur]);
 		itf->Swap(z);
 		itf->Sumf(tmpfunc);
@@ -201,7 +202,7 @@ Rcpp::List OptimPriceStorage(NumericVector Prices,NumericVector Pmoins,NumericVe
 	}
 	return Rcpp::List::create(
 			Rcpp::Named("xEtoile") = Rcpp::wrap(xEtoile));
-	};
+	}
 
 double evalf_(NumericVector BreakPoints, NumericVector Prices,double x)
 {
@@ -243,7 +244,7 @@ Rcpp::NumericVector SerialOptimPriceStorage(NumericMatrix Prices,NumericMatrix B
 		}
 	  }
 	return benefit;
-};
+}
 
 
 #endif /* CPLFUNCTIONVEC_HPP_ */

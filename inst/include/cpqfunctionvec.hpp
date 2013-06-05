@@ -42,7 +42,7 @@ class cpqfunctionvec {
 	  for (int compteur=0; compteur<length; compteur++){
 		Slopes0[0]=S0[compteur];Slopes1[0]=S1[compteur];
 		BreakPoints[0]=B1[compteur];
-		BreakPoints[1]=numeric_limits<double>::infinity();
+		BreakPoints[1]=std::numeric_limits<double>::infinity();
 		//vectorofcpqfunctions_.push_back(cpqfunction(Slopes,BreakPoints,0));
 		MycpqfunctionList_.push_back(cpqfunction(Slopes0,Slopes1,BreakPoints,0.0));
 	  }
@@ -55,8 +55,8 @@ class cpqfunctionvec {
 	  Rcpp::NumericVector BreakPoints(2);
 	  for (int compteur=0; compteur<length; compteur++){
 		Slopes0[0]=S0[compteur];Slopes1[0]=S1[compteur];
-		BreakPoints[0]=-numeric_limits<double>::infinity();
-		BreakPoints[1]=numeric_limits<double>::infinity();
+		BreakPoints[0]=-std::numeric_limits<double>::infinity();
+		BreakPoints[1]=std::numeric_limits<double>::infinity();
 		//vectorofcpqfunctions_.push_back(cpqfunction(Slopes,BreakPoints,0));
 		MycpqfunctionList_.push_back(cpqfunction(Slopes0,Slopes1,BreakPoints,0.0));
 	  }
