@@ -1,9 +1,9 @@
 Package: ConConPiWiFun
 Type: Package
 Title: This package contains an implementation of continuous convex
-        piecewise (linear) functions (quadratic coming soon
-Version: 0.3
-Date: 2013-01-15
+        piecewise (linear and quadratic) functions
+Version: 0.4.1
+Date: 2013-06-05
 Author: Robin Girard
 Maintainer: Robin Girard <robin.girard@mines-paristech.fr>
 Description: Continuous convex piecewise linear (ccpl) resp. quadratic
@@ -17,9 +17,10 @@ Description: Continuous convex piecewise linear (ccpl) resp. quadratic
         This package is a wrapper on such a class based on Rcpp
         modules.
 License: GPL (>= 2)
-Depends: methods, graphics, Rcpp (>= 0.10.2)
+Depends: methods, graphics, Rcpp (>= 0.10.3)
 LinkingTo: Rcpp
-RcppModules: mod_cplfunction
-Packaged: 2013-02-12 20:28:53 UTC; robin
+RcppModules: mod_cplfunction,mod_cpqfunction
+Packaged: 2013-06-06 07:19:35 UTC; robin
+NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-02-13 06:14:16
+Date/Publication: 2013-06-06 09:41:03
