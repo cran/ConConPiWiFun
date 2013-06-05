@@ -1,4 +1,4 @@
-e8c896597d0831a588e1b24b561f44fe *DESCRIPTION
+a1015a3bc1711e066a583a03eea080a8 *DESCRIPTION
 951f7770cf4f47ae0f82486b8e491475 *NAMESPACE
 f06422ce843b1bb04deffdb589c08e16 *R/test/Examples_cplfunction.R
 01d40386ea6895c2d0ec436c8116d0a2 *R/test/Examples_cpqfunction.R
@@ -19,6 +19,6 @@ ec316805e53448253439743c8765fae5 *man/ConConPiWiFun-package.Rd
 76480a3da8b97bb0606a36c6b79c3b31 *man/cplfunctionvec.Rd
 98525af5a7f3fdcf08c4fd9047776db5 *man/cpqfunction.Rd
 77ccffba98d642de52cdee37026a54fa *man/cpqfunctionvec.Rd
-7c5471973928f595af23c5645d8f9ea0 *src/Makevars
+fc4be479cd9a59714ba519f65943c399 *src/Makevars
 c30e7181ab80107bc46c98663e64e885 *src/Makevars.win
 e57b7f9c8cb7d0d90cd39edf3f078f28 *src/Modules.cc
