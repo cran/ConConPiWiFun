@@ -42,7 +42,7 @@ class cpqfunctionvec {
 	  for (int compteur=0; compteur<length; compteur++){
 		Slopes0[0]=S0[compteur];Slopes1[0]=S1[compteur];
 		BreakPoints[0]=B1[compteur];
-		BreakPoints[1]=std::numeric_limits<double>::infinity();
+		BreakPoints[1]=numeric_limits<double>::infinity();
 		//vectorofcpqfunctions_.push_back(cpqfunction(Slopes,BreakPoints,0));
 		MycpqfunctionList_.push_back(cpqfunction(Slopes0,Slopes1,BreakPoints,0.0));
 	  }
@@ -55,12 +55,33 @@ class cpqfunctionvec {
 	  Rcpp::NumericVector BreakPoints(2);
 	  for (int compteur=0; compteur<length; compteur++){
 		Slopes0[0]=S0[compteur];Slopes1[0]=S1[compteur];
-		BreakPoints[0]=-std::numeric_limits<double>::infinity();
-		BreakPoints[1]=std::numeric_limits<double>::infinity();
+		BreakPoints[0]=-numeric_limits<double>::infinity();
+		BreakPoints[1]=numeric_limits<double>::infinity();
 		//vectorofcpqfunctions_.push_back(cpqfunction(Slopes,BreakPoints,0));
 		MycpqfunctionList_.push_back(cpqfunction(Slopes0,Slopes1,BreakPoints,0.0));
 	  }
   }
+
+  void SerialPenalize(Rcpp::NumericVector alpha,
+		  Rcpp::NumericVector inf,Rcpp::NumericVector sup)
+  {
+	  int length=MycpqfunctionList_.size();
+	  //assert(alpha.size()==length);
+	  Rcpp::NumericVector Slopes(2);
+	  Rcpp::NumericVector BreakPoints(2);
+	  std::vector<cpqfunction> f;
+    double zero=0;
+	  cpqfunction tmp1,tmp2,tmp3;
+	  for (int compteur=0; compteur<length; compteur++){
+		Slopes[0]=alpha[compteur];Slopes[1]=std::numeric_limits<double>::infinity();
+		BreakPoints[0]=inf[compteur];BreakPoints[1]=sup[compteur];
+		tmp1=MycpqfunctionList_[compteur];
+		f.push_back(cpqfunction(Slopes,Slopes,BreakPoints,zero));
+		//vectorofcplfunctions_.push_back(cplfunction(Slopes,BreakPoints,0));
+		vec_set(compteur,Sumq(tmp1,f[compteur]));
+	  }
+  };
+
 
 
   //Optim problem solving

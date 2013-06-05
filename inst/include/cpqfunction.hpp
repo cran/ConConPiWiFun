@@ -29,14 +29,14 @@ class  cpqfunction {
   	  for (int i=0; i<NbCoefficients; i++){
   	    Breakpoints_[BreakPoints[i]]=Coefficients[i];
   	  }
-  	  Breakpoints_[BreakPoints[NbCoefficients]]=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+  	  Breakpoints_[BreakPoints[NbCoefficients]]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
   	  FirstBreakVal_= FirstBreakVal;
     };
 
     cpqfunction(pair<double,double> * Coefficients,double val){
   	  // This function constructs a simple quadratic function, no breaks.
   	  int NbCoefficients=1;
-  	  double BreakPoints[1]={-std::numeric_limits<double>::infinity()};
+  	  double BreakPoints[1]={-numeric_limits<double>::infinity()};
       create_cpqfunction(NbCoefficients,Coefficients,BreakPoints,val);
     }
 
@@ -54,14 +54,14 @@ class  cpqfunction {
 						  {
 							Breakpoints_[BreakPoints[i]]=Slopes2Coeffs(Slopes0[i],Slopes1[i]);
 						  }else{
-								Rcpp::Rcout<<"getSlope(coeffs,BreakPoints[i])"<<getSlope(coeffs,BreakPoints[i])<<std::endl;
-								Rcpp::Rcout<<"getSlope(Slopes2Coeffs(Slopes0[i-1],Slopes1[i-1]),BreakPoints[i])"<<getSlope(Slopes2Coeffs(Slopes0[i-1],Slopes1[i-1]),BreakPoints[i])<<std::endl;
+								Rcout<<"getSlope(coeffs,BreakPoints[i])"<<getSlope(coeffs,BreakPoints[i])<<endl;
+								Rcout<<"getSlope(Slopes2Coeffs(Slopes0[i-1],Slopes1[i-1]),BreakPoints[i])"<<getSlope(Slopes2Coeffs(Slopes0[i-1],Slopes1[i-1]),BreakPoints[i])<<endl;
 
 							Rprintf( "Error: non increasing Slopes" ) ;
 									throw nonincreasingslopes() ;
 						  }
 					  }
-					  Breakpoints_[BreakPoints[NbSlopes]]=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+					  Breakpoints_[BreakPoints[NbSlopes]]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 					  FirstBreakVal_= FirstBreakVal;
 				}else{
 					Rprintf( "Error: non increasing breakpoints" ) ;
@@ -91,7 +91,7 @@ class  cpqfunction {
 	    // Simple quadratic function bounded from above and below
 	    int NbCoefficients=1;
 	    pair<double,double> Coefficients [2];
-	    Coefficients[0]=Coefficient; Coefficients[1]=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+	    Coefficients[0]=Coefficient; Coefficients[1]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 	    create_cpqfunction(NbCoefficients,Coefficients,twobreaks,val);
     };
 
@@ -146,32 +146,32 @@ class  cpqfunction {
 		map<double,pair<double,double> >::iterator itplus1=Breakpoints_.begin(); ++itplus1;
 		while(itplus1 != Breakpoints_.end())
 		{
-			Rcpp::Rcout<<"|"<<it->first<<"|";
-			Rcpp::Rcout<<"__("<< getSlope(it->second,0);
-			Rcpp::Rcout<<","<< getSlope(it->second,1)<<")__";
+			Rcout<<"|"<<it->first<<"|";
+			Rcout<<"__("<< getSlope(it->second,0);
+			Rcout<<","<< getSlope(it->second,1)<<")__";
 			++it; ++itplus1;
 		}
 		//last point
-		Rcpp::Rcout<<"|"<<it->first<<"|";
-		Rcpp::Rcout<<"__("<<it->second.first;
-		Rcpp::Rcout<<","<< it->second.second<<")__";
-		Rcpp::Rcout<<std::endl;
+		Rcout<<"|"<<it->first<<"|";
+		Rcout<<"__("<<it->second.first;
+		Rcout<<","<< it->second.second<<")__";
+		Rcout<<endl;
 
 		it=Breakpoints_.begin();
 		itplus1=Breakpoints_.begin(); ++itplus1;
 
 		while(itplus1 != Breakpoints_.end())
 		{
-			Rcpp::Rcout<<"|"<<it->first<<"|";
-			Rcpp::Rcout<<"__("<< it->second.first;
-			Rcpp::Rcout<<","<< it->second.second<<")__";
+			Rcout<<"|"<<it->first<<"|";
+			Rcout<<"__("<< it->second.first;
+			Rcout<<","<< it->second.second<<")__";
 			++it; ++itplus1;
 		}
 		//last point
-		Rcpp::Rcout<<"|"<<it->first<<"|";
-		Rcpp::Rcout<<"__("<<it->second.first;
-		Rcpp::Rcout<<","<< it->second.second<<")__";
-		Rcpp::Rcout<<std::endl;
+		Rcout<<"|"<<it->first<<"|";
+		Rcout<<"__("<<it->second.first;
+		Rcout<<","<< it->second.second<<")__";
+		Rcout<<endl;
 
   	}
 
@@ -196,7 +196,7 @@ class  cpqfunction {
     	map<double, pair<double,double> >::reverse_iterator rev_it = Breakpoints_.rbegin();
     	if (it->first>x || rev_it->first<x)
     	{
-    		return std::numeric_limits<double>::infinity();
+    		return numeric_limits<double>::infinity();
     	}
     	else
     	{
@@ -301,7 +301,7 @@ class  cpqfunction {
 	bool is_a_point()
 	{
 		return ((Breakpoints_.size()==1)&&
-				(Breakpoints_.begin()->second).first==std::numeric_limits<double>::infinity());
+				(Breakpoints_.begin()->second).first==numeric_limits<double>::infinity());
 	}
 
 	bool is_an_infinite_line()
@@ -320,13 +320,13 @@ class  cpqfunction {
 		bool is_last_linear=false;
 		if (tmp.is_a_point())
 		{// a point get transformed into a line
-			Breakpoints_[-std::numeric_limits<double>::infinity()]=pair<double,double>(0.,Breakpoints_.begin()->first);
+			Breakpoints_[-numeric_limits<double>::infinity()]=pair<double,double>(0.,Breakpoints_.begin()->first);
 			done=true;
 		}
 
 		if (tmp.is_an_infinite_line())
 		{// an infinite line get transformed into a point
-			Breakpoints_[((tmp.Breakpoints_.begin())->second).second]=pair<double,double>(0.,std::numeric_limits<double>::infinity());
+			Breakpoints_[((tmp.Breakpoints_.begin())->second).second]=pair<double,double>(0.,numeric_limits<double>::infinity());
 			done=true;
 		}
 
@@ -340,9 +340,9 @@ class  cpqfunction {
 			map<double,pair<double,double> >::iterator itplus1=tmp.Breakpoints_.begin(); ++itplus1;
 			bool is_last_infinite=false;
 
-			if ((it->first!=-std::numeric_limits<double>::infinity()))
+			if ((it->first!=-numeric_limits<double>::infinity()))
 			{// first break is not infinity : this will give a slope and a first break with inf
-				Breakpoints_[-std::numeric_limits<double>::infinity()]=pair<double,double>(0.,it->first);
+				Breakpoints_[-numeric_limits<double>::infinity()]=pair<double,double>(0.,it->first);
 				is_last_linear=true;
 			}else
 			{// nothing here for now
@@ -352,7 +352,7 @@ class  cpqfunction {
 			while (itplus1!=tmp.Breakpoints_.end())
 			{
 				is_last_linear=!push_quad_if_not_linear(it) && is_last_linear;
-				if (itplus1->first!=std::numeric_limits<double>::infinity())
+				if (itplus1->first!=numeric_limits<double>::infinity())
 				{
 					is_last_linear=push_linear_if_diff(it,itplus1);
 				}
@@ -361,10 +361,10 @@ class  cpqfunction {
 
 			if (is_last_linear)
 			{
-				Breakpoints_[getSlope(it->second,0)]=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+				Breakpoints_[getSlope(it->second,0)]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 			}else
 			{
-				Breakpoints_[std::numeric_limits<double>::infinity()]=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+				Breakpoints_[numeric_limits<double>::infinity()]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 			}
 		}
 
@@ -373,8 +373,8 @@ class  cpqfunction {
 		//treating the first non null breakval
 		map<double,pair<double,double> >::iterator it=tmp.Breakpoints_.begin();
 	    map<double,pair<double,double> >::iterator itobj=Breakpoints_.begin();
-		if (itobj->first==-std::numeric_limits<double>::infinity()){itobj++;}
-		if (it->first==-std::numeric_limits<double>::infinity()){it++;}
+		if (itobj->first==-numeric_limits<double>::infinity()){itobj++;}
+		if (it->first==-numeric_limits<double>::infinity()){it++;}
 
 		pair<double,double> Coef=pair<double,double>(itobj->second.first,itobj->second.second);
 
@@ -437,7 +437,7 @@ class  cpqfunction {
 			   if (NbCoefficients==0){
 				   res =tmp.Breakpoints_.begin()->first;
 			   }else{
-				   Rcout<<"NbCoefficients="<<NbCoefficients<<std::endl;
+				   Rcout<<"NbCoefficients="<<NbCoefficients<<endl;
 				   throw emptyfunc();
 			   }
 		   }
@@ -482,20 +482,20 @@ class  cpqfunction {
 	   if (tmp.Breakpoints_.size()<1 ||leftBreak>=rightBreak ||tmp.Breakpoints_.begin()->first>=rightBreak ||tmp.Breakpoints_.rbegin()->first<=leftBreak){
 		   if (tmp.Breakpoints_.begin()->first==rightBreak){
 			   Breakpoints_.clear();
-			   Breakpoints_[tmp.Breakpoints_.begin()->first]=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+			   Breakpoints_[tmp.Breakpoints_.begin()->first]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 		   }else{
 			   if (tmp.Breakpoints_.rbegin()->first==leftBreak){
 				   Breakpoints_.clear();
-				   Breakpoints_[tmp.Breakpoints_.rbegin()->first]=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+				   Breakpoints_[tmp.Breakpoints_.rbegin()->first]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 			   }else{
-				   Rcpp::Rcout<<"empty function as a result of Squeeze"<<std::endl;
+				   Rcout<<"empty function as a result of Squeeze"<<endl;
 				   throw emptyfunc();
 			   }
 		   }
 	   }else{
 		   if (tmp.Breakpoints_.size()==1){
 			   Breakpoints_.clear();
-			   Breakpoints_[tmp.Breakpoints_.rbegin()->first]=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+			   Breakpoints_[tmp.Breakpoints_.rbegin()->first]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 		   }else{
 	   		   map<double, pair<double,double> >::iterator itleft,itright,itb;
 			   unsigned int initialsize=tmp.Breakpoints_.size();
@@ -521,7 +521,7 @@ class  cpqfunction {
 			   itb=Breakpoints_.end();
 			   if (itright!=itb) Breakpoints_.erase(itright,itb);
 			   map<double, pair<double,double> >::reverse_iterator irev=Breakpoints_.rbegin();
-			   irev->second=pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+			   irev->second=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 			   }
 		   }
 	   }
@@ -540,7 +540,7 @@ class  cpqfunction {
       if (tmp1.Breakpoints_.size()<=2){
         if (tmp1.Breakpoints_.size()==1){
   			  if (tmp1.Breakpoints_.begin()->first!=Breakpoints_.begin()->first){
-  				  Rcpp::Rcout<<"in Sumf"<<std::endl;
+  				  Rcout<<"in Sumf"<<endl;
   				  throw emptyfunc();
   			  }
         }else{
@@ -600,7 +600,7 @@ class  cpqfunction {
 		   last_first = rit->first;
 		   ++rit;
 	   }
-	   Breakpoints_[y-last_first] = pair<double,double>(std::numeric_limits<double>::infinity(),std::numeric_limits<double>::infinity());
+	   Breakpoints_[y-last_first] = pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 	   //Rcout<<"out:"<<endl;
 	   //this->print();
 	   //return(*this);

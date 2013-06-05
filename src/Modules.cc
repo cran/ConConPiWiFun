@@ -1,6 +1,19 @@
 #include "ConConPiWiFun.h"
 
 
+//RCPP_MODULE(mod_cplfunctionR){
+//  using namespace Rcpp;
+//
+//	class_<cplfunctionR>( "cplfunctionR" )
+//	//constructors
+//	.constructor()
+//	.constructor<double,double>()
+//	//.constructor<double,double,double>()
+//	.constructor<double,double,double,double>()
+//	.constructor<Rcpp::NumericVector,Rcpp::NumericVector,double>()
+//	;
+//}
+
 RCPP_MODULE(mod_cplfunction){
   using namespace Rcpp;
 
@@ -44,6 +57,9 @@ RCPP_MODULE(mod_cplfunction){
  // .method("OptimMargInt2",&cplfunctionvec::OptimMargInt2,"Solves optimisation problem")
   .method("SerialPush_1Breaks_Functions",&cplfunctionvec::SerialPush_1Breaks_Functions)
   .method("SerialPush_2Breaks_Functions",&cplfunctionvec::SerialPush_2Breaks_Functions)
+  .method("SerialPush_nBreaks_Functions",&cplfunctionvec::SerialPush_nBreaks_Functions)
+  .method("SerialPenalize",&cplfunctionvec::SerialPenalize)
+  .method("SerialPush_Store_Functions",&cplfunctionvec::SerialPush_Store_Functions)
   ;
 
 

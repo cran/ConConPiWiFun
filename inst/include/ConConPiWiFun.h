@@ -8,26 +8,18 @@
 #ifndef CONCONPIWIFUN_H_
 #define CONCONPIWIFUN_H_
 
-#include <assert.h>
 
 #include <Rcpp.h>
-//#include <utility>
-//#include <map>
-//#include <vector>
-//#include <limits>
-//#include <iostream>
+//#include <boost/rational.hpp>
 using namespace Rcpp;
-
-using std::pair;
-using std::map;
-using std::vector;
-//using std::numeric_limits;
+using namespace std;
 //#include <iostream>
 //#include <math.h>
 //#include <limits>
 
 //#include <vector>
 //#include <map>
+//#include <assert.h>
 
 class cplfunction ;
 class cplfunctionvec;
@@ -39,7 +31,6 @@ RCPP_EXPOSED_CLASS(cplfunctionvec)
 RCPP_EXPOSED_CLASS(cpqfunction)
 RCPP_EXPOSED_CLASS(cpqfunctionvec)
 
-
 bool isincreasing(Rcpp::NumericVector arg);
 double getSlope(std::pair<double,double> Coefficients,double val);
 double getVal(std::pair<double,double> Coefficients,double val);
@@ -49,6 +40,7 @@ std::pair<double,double> Slopes2Coeffs(double Slopes0,double Slopes1);
 #include "convex_functions_tools.hpp"
 
 #include "cplfunction.hpp"
+//#include "cplfunctionR.hpp"
 #include "cpqfunction.hpp"
 #include "convex_function_manip.hpp"
 

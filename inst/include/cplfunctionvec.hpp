@@ -61,6 +61,97 @@ class cplfunctionvec {
 	  }
   };
 
+  void SerialPush_nBreaks_Functions(Rcpp::NumericMatrix S, Rcpp::NumericMatrix B)
+  {
+	  int length=S.nrow(),nbbreak=S.ncol();
+	  Rcpp::NumericVector Slopes(nbbreak);
+	  Rcpp::NumericVector BreakPoints(nbbreak);
+	  for (int compteur=0; compteur<length; compteur++){
+		Slopes=S(compteur,_);BreakPoints=B(compteur,_);
+		//vectorofcplfunctions_.push_back(cplfunction(Slopes,BreakPoints,0));
+		MycplfunctionList_.push_back(cplfunction(Slopes,BreakPoints,0));
+	  }
+  };
+
+
+  void SerialPush_Store_Functions(double gamma1, double gamma2, Rcpp::NumericVector Pflex, Rcpp::NumericVector Prod)
+  {// gamma1 rendement stockage, gamma2 rendement d?stockage
+	  int length=Pflex.size();
+
+	  Rcpp::NumericVector Slopes2(3);
+	  Rcpp::NumericVector BreakPoints2(3);
+	  Rcpp::NumericVector Slopes1(2);
+	  Rcpp::NumericVector BreakPoints1(2);
+	  std::vector<cplfunction> res2;
+	  cplfunction tmp1,tmp2,res;
+	  double Prodtmp;
+	  for (int compteur=0; compteur<length; compteur++){
+		  //calcul de f1=(x*1(x>0)+gamma2 * x*1(x>0)-P/gamma1)_+
+		  // + f2=(x*1(x>0)+gamma2 * x*1(x>0)-P/gamma1)_+
+		  Prodtmp=Prod[compteur]+Pflex[compteur];
+		if (Prod[compteur]<0)
+		{// deux breakpoints
+			Slopes2[0]=0;Slopes2[1]=gamma2;Slopes2[2]=1;
+			BreakPoints2[0]=-std::numeric_limits<double>::infinity();
+			BreakPoints2[1]=Prod[compteur]/gamma1; BreakPoints2[2]=0;
+			res2.push_back(cplfunction(Slopes2,BreakPoints2,0));
+
+		}else
+		{
+			Slopes1[0]=0;Slopes1[1]=1;
+				BreakPoints1[0]=-std::numeric_limits<double>::infinity();
+				BreakPoints1[1]=Prod[compteur]/gamma1;
+				res2.push_back(cplfunction(Slopes1,BreakPoints1,0));
+		}
+
+
+		if (Prodtmp<0)
+		{// deux breakpoints
+			Slopes2[0]=0;Slopes2[1]=gamma2;Slopes2[2]=1;
+			BreakPoints2[0]=-std::numeric_limits<double>::infinity();
+			BreakPoints2[1]=Prodtmp/gamma1; BreakPoints2[2]=0;
+			//(MycplfunctionList_.rbegin())->Sumf(cplfunction(Slopes2,BreakPoints2,0))
+			MycplfunctionList_.push_back(cplfunction(Slopes2,BreakPoints2,0));
+      
+		}else
+		{
+			Slopes1[0]=0;Slopes1[1]=1;
+				BreakPoints1[0]=-std::numeric_limits<double>::infinity();
+				BreakPoints1[1]=Prodtmp/gamma1;
+				MycplfunctionList_.push_back(cplfunction(Slopes1,BreakPoints1,0));
+		}
+
+		// res=Suml(tmp1,tmp2);
+    //cplfunction tmp3=Suml(tmp2,tmp1);
+    //MycplfunctionList_.push_back(tmp1);
+		(MycplfunctionList_.rbegin())->Sumf(*(res2.rbegin()));
+		//itend=MycplfunctionList_.rbegin();
+		//itend->Sumf(tmp2);
+		//vectorofcplfunctions_.push_back(cplfunction(Slopes,BreakPoints,0));
+		//MycplfunctionList_.push_back(Suml(tmp1,tmp2));
+	  }
+  };
+
+  void SerialPenalize(Rcpp::NumericVector alpha,
+		  Rcpp::NumericVector inf,Rcpp::NumericVector sup)
+  {
+	  int length=MycplfunctionList_.size();
+	  //assert(alpha.size()==length);
+	  Rcpp::NumericVector Slopes(2);
+	  Rcpp::NumericVector BreakPoints(2);
+	  std::vector<cplfunction> f;
+    double zero=0;
+	  cplfunction tmp1,tmp2,tmp3;
+	  for (int compteur=0; compteur<length; compteur++){
+		Slopes[0]=alpha[compteur];Slopes[1]=std::numeric_limits<double>::infinity();
+		BreakPoints[0]=inf[compteur];BreakPoints[1]=sup[compteur];
+		tmp1=MycplfunctionList_[compteur];
+		//f.push_back(cplfunction(Slopes,BreakPoints,zero));
+		//vectorofcplfunctions_.push_back(cplfunction(Slopes,BreakPoints,0));
+		vec_set(compteur,Suml(tmp1,cplfunction(Slopes,BreakPoints,zero)));
+	  }
+  };
+
 
   //Optim problem solving
 
@@ -159,7 +250,7 @@ Rcpp::List OptimPriceStorage(NumericVector Prices,NumericVector Pmoins,NumericVe
 	std::vector<cplfunction> f;
 	cplfunction tmpfunc,tmpfunc3;
 
-	cplfunction tmpfunc2=cplfunction(*Pmoins_it,*Pplus_it,0,*Prices_it,std::numeric_limits<double>::infinity());
+	cplfunction tmpfunc2=cplfunction(*Pmoins_it,*Pplus_it,0,*Prices_it,numeric_limits<double>::infinity());
 	f.push_back(tmpfunc2);
 	++Pplus_it;++Pmoins_it; ++Prices_it;
 
@@ -184,7 +275,7 @@ Rcpp::List OptimPriceStorage(NumericVector Prices,NumericVector Pmoins,NumericVe
 	while(itf!= itfend)
 	{
 		--compteur;
-		cplfunction tmpfunc=cplfunction(Pmoins[compteur+1],Pplus[compteur+1],0,Prices[compteur+1],std::numeric_limits<double>::infinity());
+		cplfunction tmpfunc=cplfunction(Pmoins[compteur+1],Pplus[compteur+1],0,Prices[compteur+1],numeric_limits<double>::infinity());
 		itf->Squeeze(Cmoins[compteur],Cplus[compteur]);
 		itf->Swap(z);
 		itf->Sumf(tmpfunc);
