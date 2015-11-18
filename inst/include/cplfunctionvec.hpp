@@ -48,6 +48,7 @@ class cplfunctionvec {
 	  }
   }
 
+
   void SerialPush_2Breaks_Functions(Rcpp::NumericVector S1,Rcpp::NumericVector S2, Rcpp::NumericVector B1,Rcpp::NumericVector B2)
   {
 	  int length=S1.size();
@@ -240,8 +241,90 @@ Rcpp::List OptimMargInt(NumericVector Pmoins,NumericVector Pplus,NumericVector C
 
 	};
 
+	Rcpp::NumericVector OptimPriceMarket_(NumericVector Pplus, double Conso)
+	{
+	int length=MycplfunctionList_.size();
+	int compteur=0;
+	std::vector<double> xEtoile(length);
+
+
+	std::vector<cplfunction> f;
+	cplfunction tmpfunc,tmpfunc2,tmpfunc3;
+	std::vector<cplfunction>::iterator itend,it = MycplfunctionList_.begin();
+	tmpfunc2=*it;
+	//Rcout<<"Compteur1 "<<compteur<<endl;
+	tmpfunc2.Squeeze((double)0.,Pplus[compteur]);
+	f.push_back(tmpfunc2);
+	compteur++; ++it;
+
+	itend=MycplfunctionList_.end();
+	while ( it!=itend)
+	{
+			tmpfunc=*it;
+			cplfunction tmpfunc2= *(f.rbegin());
+			if (tmpfunc.is_an_infinite_line())
+			{
+				tmpfunc2.EpiSum_Withline((double)0.,Pplus[compteur],tmpfunc.FirstSlopeVal_);
+				f.push_back(tmpfunc2);
+			}else
+			{
+				tmpfunc.Squeeze((double)0.,Pplus[compteur]);
+				tmpfunc.Legendre();
+				tmpfunc2.Legendre();
+				if (tmpfunc.Breakpoints_.size()>tmpfunc2.Breakpoints_.size())
+				{
+					tmpfunc.Sumf(tmpfunc2);
+					tmpfunc.Legendre();
+					f.push_back(tmpfunc);
+				}else
+				{
+					tmpfunc2.Sumf(tmpfunc);
+					tmpfunc2.Legendre();
+					f.push_back(tmpfunc2);
+				}
+			}
+
+			compteur++; ++it;
+  	}
+  	std::vector<cplfunction>::reverse_iterator itr,itf,itfrend;
+     itr = MycplfunctionList_.rbegin();
+     itf= f.rbegin();
+     compteur=length-1;
+     tmpfunc= *(itf);  ++itf;
+   	xEtoile[compteur]=Conso;
+   	double z=xEtoile[compteur];
+	itfrend=f.rend();
+	while(itf!= itfrend)
+	{
+			--compteur;
+			tmpfunc=*itr; ++itr;
+			tmpfunc2=*itf; ++itf;
+			tmpfunc.Squeeze((double)0.,Pplus[compteur+1]);
+			tmpfunc2.Swap(z);
+			if (tmpfunc.Breakpoints_.size()>tmpfunc2.Breakpoints_.size())
+			{
+				tmpfunc.Sumf(tmpfunc2);
+				xEtoile[compteur]=tmpfunc.Argmin();
+			}else
+			{
+				tmpfunc2.Sumf(tmpfunc);
+				xEtoile[compteur]=tmpfunc2.Argmin();
+			}
+			z=z-xEtoile[compteur];
+			xEtoile[compteur]=z;
+		}
+
+  	 double tmpval,tmpval1=0;
+  	 for (int i=0;i<length;i++){
+  		 tmpval=xEtoile[i];
+  		 xEtoile[i]=xEtoile[i]-tmpval1;
+  		 tmpval1=tmpval;
+  	 }
+     return(Rcpp::wrap(xEtoile));
+	};
+
 };
-Rcpp::List OptimPriceStorage(NumericVector Prices,NumericVector Pmoins,NumericVector Pplus,NumericVector Cmoins,NumericVector Cplus)
+Rcpp::List OptimPriceStorage_(NumericVector Prices,NumericVector Pmoins,NumericVector Pplus,NumericVector Cmoins,NumericVector Cplus)
 {
 	int length=Pmoins.size();
 	NumericVector::iterator Pmoins_it=Pmoins.begin(), Cmoins_it=Cmoins.begin();
@@ -295,6 +378,10 @@ Rcpp::List OptimPriceStorage(NumericVector Prices,NumericVector Pmoins,NumericVe
 			Rcpp::Named("xEtoile") = Rcpp::wrap(xEtoile));
 	}
 
+
+
+
+
 double evalf_(NumericVector BreakPoints, NumericVector Prices,double x)
 {
 	if (abs(x)<=50)
@@ -336,6 +423,68 @@ Rcpp::NumericVector SerialOptimPriceStorage(NumericMatrix Prices,NumericMatrix B
 	  }
 	return benefit;
 }
+
+
+
+
+
+Rcpp::NumericVector OptimPriceMarket_l_(NumericVector Prices,NumericVector Pplus, double Conso)
+{
+int length=Prices.size();
+NumericVector::iterator Pplus_it=Pplus.begin(),Prices_itend = Prices.end(),Prices_it=Prices.begin();
+std::vector<cplfunction> f;
+cplfunction tmpfunc,tmpfunc3;
+
+cplfunction tmpfunc2=cplfunction((double)0.,*Pplus_it,0,*Prices_it,numeric_limits<double>::infinity());
+f.push_back(tmpfunc2);
+++Pplus_it; ++Prices_it;
+while ( Prices_it!=Prices_itend)
+{
+	tmpfunc2.EpiSum_Withline((double)0.,*Pplus_it,*Prices_it);
+	f.push_back(tmpfunc2);
+	++Prices_it; ++Pplus_it;
+}
+std::vector<cplfunction>::reverse_iterator itr,itf,itfend;
+itfend=f.rend();
+itf= f.rbegin();
+int compteur=length-1;
+NumericVector xEtoile(length);
+xEtoile[compteur]=Conso;  ++itf;
+double z=xEtoile[compteur];
+while(itf!= itfend)
+{
+	--compteur;
+	cplfunction tmpfunc=cplfunction((double)0.,Pplus[compteur+1],0,Prices[compteur+1],numeric_limits<double>::infinity());
+	itf->Swap(z);
+	itf->Sumf(tmpfunc);
+	xEtoile[compteur]=itf->Argmin();
+	++itf;
+	z=z-xEtoile[compteur];
+	xEtoile[compteur]=z;
+}
+double tmpval,tmpval1=0;
+for (int i=0;i<length;i++)
+{
+	tmpval=xEtoile[i];
+	xEtoile[i]=xEtoile[i]-tmpval1;
+	tmpval1=tmpval;
+}
+ return(Rcpp::wrap(xEtoile));
+};
+
+
+Rcpp::NumericMatrix OptimPriceMarket_l(NumericMatrix OffresPrix,NumericMatrix Availability,NumericVector Conso)
+{
+	int nbpasTemps=OffresPrix.nrow(),nbProd=OffresPrix.ncol();
+	Rcpp::NumericMatrix Power(nbpasTemps,nbProd);
+
+	for (int compteurt=0; compteurt<nbpasTemps; compteurt++){
+		  Power(compteurt,_)=OptimPriceMarket_l_(OffresPrix(compteurt,_),Availability(compteurt,_),Conso[compteurt]);
+	}
+
+	return Power;
+}
+
 
 
 #endif /* CPLFUNCTIONVEC_HPP_ */

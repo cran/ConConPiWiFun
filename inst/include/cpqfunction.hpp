@@ -94,7 +94,15 @@ class  cpqfunction {
 	    Coefficients[0]=Coefficient; Coefficients[1]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 	    create_cpqfunction(NbCoefficients,Coefficients,twobreaks,val);
     };
-
+//    cpqfunction(Rcpp::NumericVector TwoBreaks,Rcpp::NumericVector Slopes)
+//    {
+//    	int NbCoefficients=1;
+//    	pair<double,double> Coefficients [2];
+//    	Coefficients[0]=Slopes2Coeffs(Slopes[0],Slopes[1]);
+//    	Coefficients[1]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
+//
+//    	create_cpqfunction(NbCoefficients,Coefficients,twobreaks,val);
+//    }
     //stack exceptions, implement std::exception
     class emptyfunc : public std::exception {
      public:
@@ -475,19 +483,24 @@ class  cpqfunction {
    }
 
     void Squeeze(double leftBreak,double rightBreak){
-  	 // Rcout << __FUNCTION__ << "("<<leftBreak<<","<<rightBreak<<")"<<endl;
+  	  //Rcout << __FUNCTION__ << "("<<leftBreak<<","<<rightBreak<<")"<<endl;
 	  //this->print();
 	   cpqfunction tmp(*this);
 
 	   if (tmp.Breakpoints_.size()<1 ||leftBreak>=rightBreak ||tmp.Breakpoints_.begin()->first>=rightBreak ||tmp.Breakpoints_.rbegin()->first<=leftBreak){
-		   if (tmp.Breakpoints_.begin()->first==rightBreak){
+		   if (tmp.Breakpoints_.begin()->first==rightBreak||tmp.Breakpoints_.begin()->first==-numeric_limits<double>::infinity()){
 			   Breakpoints_.clear();
 			   Breakpoints_[tmp.Breakpoints_.begin()->first]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 		   }else{
-			   if (tmp.Breakpoints_.rbegin()->first==leftBreak){
+			   if (tmp.Breakpoints_.rbegin()->first==leftBreak||tmp.Breakpoints_.rbegin()->first==numeric_limits<double>::infinity()){
 				   Breakpoints_.clear();
 				   Breakpoints_[tmp.Breakpoints_.rbegin()->first]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 			   }else{
+				   Rcout<<"tmp.Breakpoints_.size()"<<tmp.Breakpoints_.size()<<endl;
+				   Rcout<<"rightBreak"<<rightBreak<<endl;
+				   Rcout<<"leftBreak"<<leftBreak<<endl;
+				   Rcout<<"tmp.Breakpoints_.begin()->first"<<tmp.Breakpoints_.begin()->first<<endl;
+				   Rcout<<"tmp.Breakpoints_.rbegin()->first"<<tmp.Breakpoints_.rbegin()->first<<endl;
 				   Rcout<<"empty function as a result of Squeeze"<<endl;
 				   throw emptyfunc();
 			   }

@@ -598,15 +598,15 @@ class cplfunction {
 
     void Squeeze(double leftBreak,double rightBreak)
     {
-     	 //  Rcout << __FUNCTION__ << "("<<leftBreak<< ","<<rightBreak<<")"<<" in "<<endl;
-     	 //  Rcout<< "left : "<<leftBreak<<", right : "<<rightBreak<<endl;
+     	  // Rcout << __FUNCTION__ << "("<<leftBreak<< ","<<rightBreak<<")"<<" in "<<endl;
+     	//   Rcout<< "left : "<<leftBreak<<", right : "<<rightBreak<<endl;
      	 //  Rcout<< "this left "<< Breakpoints_.begin()->first << "this right : "<<Breakpoints_.rbegin()->first<<endl;
      	  //Rcout<<  "this right slope : "<<Breakpoints_.rbegin()->second<<endl;
 
      	  // this->print();
      	  // Rcout<<"FirstSlopeVal_ : "<<FirstSlopeVal_<<endl;
     	// test for empty interval or empty intersection of function and interval
-bool done=false;
+    	bool done=false;
 		if (  (leftBreak>rightBreak) ||
 				(Breakpoints_.rbegin()->first<leftBreak && !is_last_infinity() ) ||
 				(Breakpoints_.begin()->first>rightBreak && !is_last_infinity()) )

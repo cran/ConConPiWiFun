@@ -4,7 +4,6 @@
 %\alias{show-methods}
 %\alias{show,ANY-method}
 \alias{SerialOptimPriceStorage}
-\alias{OptimPriceStorage}
 \alias{show,Rcpp_cplfunctionvec-method}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -25,14 +24,6 @@ Robin Girard
 \examples{
 
 
-#### function OptimPriceStorage solves 
-#           	min_x sum_i=1^n Y_i x_i
-#                   Pmoins_i<=	x_i				<=Pplus_i 		i=1,...,n
-#					Cmoins_i<=	sum_j=1^i x_j	<=Cplus_i 	i=1,...,n
-
-n=10000; Y=runif(n,0,10);  B0=array(-Inf,n);
-Pmoins=array(-1,n);Pplus=array(1,n);Cmoins=array(0,n);Cplus=array(5,n);
-res=OptimPriceStorage(Y,Pmoins,Pplus,Cmoins,Cplus)
 
 ####
 # construction of a vector of 

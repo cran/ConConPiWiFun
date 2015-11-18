@@ -44,7 +44,7 @@ cplfunction InfConfFunct(cplfunction const & cplFunction_1,cplfunction const & c
 
 
 cpqfunction Sumq(cpqfunction const & cpqfunction_1,cpqfunction const & cpqfunction_2){
-   cpqfunction tmp1=cpqfunction_1,tmp2=cpqfunction_2;
+   cpqfunction tmp1(cpqfunction_1),tmp2(cpqfunction_2);
    		if (cpqfunction_2.Breakpoints_.size()>cpqfunction_1.Breakpoints_.size()){
    			tmp2.Sumf(tmp1);
    			return(tmp2);
@@ -56,7 +56,7 @@ cpqfunction Sumq(cpqfunction const & cpqfunction_1,cpqfunction const & cpqfuncti
 
 
 cpqfunction InfConvq(cpqfunction const & cpqfunction_1,cpqfunction const & cpqfunction_2){
-       cpqfunction tmp1=cpqfunction_1,tmp2=cpqfunction_2;
+       cpqfunction tmp1(cpqfunction_1),tmp2(cpqfunction_2);
     	 tmp1.Etoile();
     	 tmp2.Etoile();
     	 cpqfunction res=Sumq(tmp1,tmp2);
@@ -69,12 +69,11 @@ cpqfunction InfConvq(cpqfunction const & cpqfunction_1,cpqfunction const & cpqfu
 // }
 
 cpqfunction InfConfFunctq(cpqfunction const & cpqfunction_1,cpqfunction const & cpqfunction_2,double y ){
-       cpqfunction tmp1=cpqfunction_1,tmp2=cpqfunction_2;
+       cpqfunction tmp1(cpqfunction_1),tmp2(cpqfunction_2);
     	 tmp2.Swap(y);
     	 cpqfunction B=Sumq(tmp1,tmp2);
     	 return(B);
-     }
-
+     };
 
 
 #endif /* CONVEX_FUNCTION_MANIP_HPP_ */

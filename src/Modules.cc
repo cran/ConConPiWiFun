@@ -61,10 +61,10 @@ RCPP_MODULE(mod_cplfunction){
   .method("SerialPenalize",&cplfunctionvec::SerialPenalize)
   .method("SerialPush_Store_Functions",&cplfunctionvec::SerialPush_Store_Functions)
   ;
-
-
-
-  Rcpp::function("OptimPriceStorage",&OptimPriceStorage)
+  
+    Rcpp::function("OptimPriceMarket_l",&OptimPriceMarket_l)
+    ;
+  Rcpp::function("OptimPriceStorage_",&OptimPriceStorage_)
   ;
 
 
@@ -74,6 +74,8 @@ RCPP_MODULE(mod_cplfunction){
   ;
   Rcpp::function("InfConvl",&InfConv,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
   ;
+  Rcpp::function("OptimPriceMarket_l",&OptimPriceMarket_l,"This function compute the market merit order.")
+    ;
 
 }
 
@@ -123,10 +125,11 @@ RCPP_MODULE(mod_cpqfunction){
   .method("OptimMargInt",&cpqfunctionvec::OptimMargInt,"Solves optimisation problem")
   .method("SerialPush_1Breaks_Functions",&cpqfunctionvec::SerialPush_1Breaks_Functions)
   .method("SerialPush_0Breaks_Functions",&cpqfunctionvec::SerialPush_0Breaks_Functions)
+  //.method("OptimPriceMarket",&cpqfunctionvec::OptimPriceMarket)
   ;
 
- // Rcpp::function("Create_3breaks_cplfunctionvec",&Create_3breaks_cplfunctionvec)
-//  ;
+  Rcpp::function("OptimPriceMarket_q",&OptimPriceMarket_q)
+  ;
 
 
 
